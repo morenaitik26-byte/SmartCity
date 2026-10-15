@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <script>try{var t=localStorage.getItem("sc-theme");if(t==="light"||t==="dark")document.documentElement.dataset.theme=t}catch(e){}</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#07111f">
+  <title>SmartCity AI | City Command Simulator</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="chart.umd.js"></script>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark">SC</div>
+        <div><strong>SmartCity <span>AI</span></strong><small>URBAN COMMAND CENTER</small></div>
+      </div>
+      <div class="nav-label">COMMAND</div>
+      <button class="nav-item active" data-view="overview"><span>▦</span> Overview</button>
+      <button class="nav-item" data-view="traffic"><span>⇄</span> Traffic control</button>
+      <button class="nav-item" data-view="environment"><span>♧</span> Environment</button>
+      <button class="nav-item" data-view="water"><span>◉</span> Water management</button>
+      <button class="nav-item" data-view="emergency"><span>⚠</span> Emergency center</button>
+      <button class="nav-item" data-view="team"><span>★</span> Our team</button>
+      <div class="sidebar-bottom">
+        <div class="demo-chip"><span class="pulse"></span> SIMULATION MODE</div>
+        <p>Educational prototype<br>All readings are fictional.</p>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <div>
+          <div class="eyebrow">CITY OPERATIONS / INDIA</div>
+          <h1 id="pageTitle">City overview</h1>
+          <p id="pageSubtitle">A live-style simulation for a smarter, safer city.</p>
+        </div>
+        <div class="top-actions">
+          <div class="clock-card"><span class="clock-dot"></span><span id="clock">--:--:--</span><small>DEMO CLOCK</small></div>
+          <button id="themeBtn" class="button button-quiet" title="Switch between dark and light theme">☀ Light</button>
+          <button id="liveBtn" class="button button-quiet" title="Make the values drift automatically">〰 Live sim</button>
+          <button id="voiceBtn" class="button button-quiet" title="Use a supported browser microphone">🎙 Voice</button>
+          <button id="presentBtn" class="button button-primary">▶ Presentation mode</button>
+          <button id="resetBtn" class="button button-quiet">↺ Reset demo</button>
+        </div>
+      </header>
+
+      <div class="notice"><strong>DEMO DATA</strong><span>This project uses simulated readings and rule-based alerts. It does not monitor or control real city infrastructure.</span></div>
+
+      <section class="view active" id="overviewView">
+        <div class="section-heading"><div><h2>City health snapshot</h2><p>Explore a sample city and change conditions below.</p></div><span class="live-tag"><i></i> DEMO LIVE</span></div>
+        <div class="metric-grid">
+          <article class="metric-card"><div class="metric-top"><span>Traffic load</span><span class="metric-icon blue">⇄</span></div><div class="metric-value"><span id="trafficMetric">42</span><small>%</small></div><div class="metric-foot"><span id="trafficStatus" class="status-pill good">Flowing</span><span>Vehicle index</span></div><div class="mini-track"><i id="trafficBar" style="width:42%"></i></div></article>
+          <article class="metric-card"><div class="metric-top"><span>Air quality index</span><span class="metric-icon green">♧</span></div><div class="metric-value"><span id="aqiMetric">58</span><small> AQI</small></div><div class="metric-foot"><span id="aqiStatus" class="status-pill good">Moderate</span><span>Sample reading</span></div><div class="mini-track green-track"><i id="aqiBar" style="width:23%"></i></div></article>
+          <article class="metric-card"><div class="metric-top"><span>Water reserve</span><span class="metric-icon cyan">◉</span></div><div class="metric-value"><span id="waterMetric">68</span><small>%</small></div><div class="metric-foot"><span id="waterStatus" class="status-pill good">Healthy</span><span>Reservoir level</span></div><div class="mini-track cyan-track"><i id="waterBar" style="width:68%"></i></div></article>
+          <article class="metric-card"><div class="metric-top"><span>Active alerts</span><span class="metric-icon orange">⚠</span></div><div class="metric-value"><span id="alertMetric">0</span><small> alerts</small></div><div class="metric-foot"><span class="status-pill" id="alertStatus">All systems normal</span><span>Rule-based</span></div><div class="mini-track orange-track"><i id="alertBar" style="width:5%"></i></div></article>
+        </div>
+
+        <div class="content-grid">
+          <article class="panel city-panel">
+            <div class="panel-heading"><div><h3>Interactive city map</h3><p>Select a zone to inspect its simulated status.</p></div><span class="tiny-label">5 ZONES</span></div>
+            <div class="city-map">
+              <div class="map-road road-h"></div><div class="map-road road-v"></div><div class="map-road road-diag"></div>
+              <button class="zone zone-park" data-zone="Green Park"><span>♧</span><b>GREEN PARK</b><small>Environment</small></button>
+              <button class="zone zone-school" data-zone="School District"><span>▤</span><b>SCHOOL DISTRICT</b><small>Education</small></button>
+              <button class="zone zone-hospital" data-zone="Medical Center"><span>✚</span><b>MEDICAL CENTER</b><small>Emergency</small></button>
+              <button class="zone zone-market" data-zone="Market Square"><span>▦</span><b>MARKET SQUARE</b><small>Traffic hub</small></button>
+              <button class="zone zone-reservoir" data-zone="Water Reservoir"><span>◉</span><b>WATER RESERVOIR</b><small>Water supply</small></button>
+              <div class="map-compass">N<br>↑</div>
+            </div>
+            <div id="zoneInfo" class="zone-info"><span class="zone-indicator"></span><div><strong>Green Park</strong><p>Choose a zone on the map to inspect it.</p></div></div>
+          </article>
+          <article class="panel alerts-panel">
+            <div class="panel-heading"><div><h3>City alert feed</h3><p>Updates when conditions change.</p></div><span class="tiny-label" id="alertCountLabel">0 ACTIVE</span></div>
+            <div id="alertList" class="alert-list"></div>
+          </article>
+        </div>
+
+        <div class="content-grid lower-grid">
+          <article class="panel chart-panel"><div class="panel-heading"><div><h3>City indicators</h3><p>Current simulated values</p></div></div><div class="chart-wrap"><canvas id="cityChart" aria-label="City indicators chart"></canvas></div></article>
+          <article class="panel quick-panel"><div class="panel-heading"><div><h3>Scenario shortcuts</h3><p>Run a prepared demonstration.</p></div></div><button class="scenario-button" data-scenario="normal"><span class="scenario-symbol">✓</span><span><b>Normal operations</b><small>Restore balanced city conditions</small></span><span>→</span></button><button class="scenario-button" data-scenario="rush"><span class="scenario-symbol yellow">⇄</span><span><b>Rush-hour congestion</b><small>Increase simulated traffic load</small></span><span>→</span></button><button class="scenario-button" data-scenario="drought"><span class="scenario-symbol cyan">◉</span><span><b>Water shortage</b><small>Lower the reservoir level</small></span><span>→</span></button><button class="scenario-button" data-scenario="emergency"><span class="scenario-symbol red">⚠</span><span><b>Emergency event</b><small>Trigger a sample incident</small></span><span>→</span></button></article>
+        </div>
+      </section>
+
+      <section class="view" id="trafficView">
+        <div class="section-heading"><div><h2>Traffic control simulator</h2><p>Explore how rule-based signal recommendations respond to traffic volume.</p></div></div>
+        <div class="module-grid">
+          <article class="panel control-panel"><h3>Traffic conditions</h3><p class="muted">Move the slider to change the vehicle index.</p><label class="range-label" for="trafficSlider"><span>Vehicle load</span><strong><span id="trafficSliderValue">42</span>%</strong></label><input id="trafficSlider" type="range" min="0" max="100" value="42"><div class="range-ends"><span>Clear roads</span><span>Heavy congestion</span></div><div class="signal-row"><div class="traffic-light"><i id="redLight"></i><i id="yellowLight"></i><i id="greenLight" class="lit"></i></div><div><strong id="signalStatus">Green — normal flow</strong><p id="signalAdvice">Maintain standard signal timing in this simulation.</p></div></div></article>
+          <article class="panel result-panel"><div class="panel-heading"><div><h3>System recommendation</h3><p>Generated from the selected traffic value.</p></div></div><div class="result-number" id="trafficResult">42%</div><div id="trafficResultStatus" class="status-pill good">Flowing</div><p id="trafficRecommendation" class="recommendation">Traffic is moving normally. Keep standard signal timing.</p><div class="explain-box"><strong>How it works</strong><p>The program compares the input with preset thresholds. It does not use live cameras or control real traffic lights.</p></div></article>
+        </div>
+      </section>
+
+      <section class="view" id="environmentView">
+        <div class="section-heading"><div><h2>Environment monitor</h2><p>Adjust sample air-quality values and see the alert logic.</p></div></div>
+        <div class="module-grid">
+          <article class="panel control-panel"><h3>Air-quality scenario</h3><p class="muted">AQI values below are fictional demo readings.</p><label class="range-label" for="aqiSlider"><span>Sample AQI</span><strong id="aqiSliderValue">58</strong></label><input id="aqiSlider" type="range" min="0" max="300" value="58"><div class="range-ends"><span>0</span><span>300</span></div><div class="aqi-scale"><span></span><span></span><span></span><span></span><span></span></div><div class="scale-labels"><span>Good</span><span>Moderate</span><span>High</span></div></article>
+          <article class="panel result-panel"><div class="panel-heading"><div><h3>Air-quality status</h3><p>Illustrative category based on this demo's rules.</p></div></div><div class="result-number" id="aqiResult">58 <small>AQI</small></div><div id="aqiResultStatus" class="status-pill good">Moderate</div><p id="aqiRecommendation" class="recommendation">Continue monitoring the sample reading.</p><div class="explain-box"><strong>Science connection</strong><p>Air-quality monitoring uses measurements of pollutants. Actual AQI interpretation depends on the official scale and local data.</p></div></article>
+        </div>
+      </section>
+
+      <section class="view" id="waterView">
+        <div class="section-heading"><div><h2>Water management</h2><p>Simulate a reservoir and test shortage warnings.</p></div></div>
+        <div class="module-grid">
+          <article class="panel control-panel"><h3>Reservoir level</h3><p class="muted">Change the sample water reserve.</p><label class="range-label" for="waterSlider"><span>Water available</span><strong><span id="waterSliderValue">68</span>%</strong></label><input id="waterSlider" type="range" min="0" max="100" value="68"><div class="range-ends"><span>Empty</span><span>Full</span></div><div class="reservoir"><div id="waterFill" class="water-fill" style="height:68%"><span id="waterFillText">68%</span></div></div></article>
+          <article class="panel result-panel"><div class="panel-heading"><div><h3>Water supply status</h3><p>Threshold-based monitoring.</p></div></div><div class="result-number" id="waterResult">68%</div><div id="waterResultStatus" class="status-pill good">Healthy reserve</div><p id="waterRecommendation" class="recommendation">Supply is in the healthy range for this demonstration.</p><div class="explain-box"><strong>Suggested response</strong><p id="waterAction">Continue routine monitoring and avoid unnecessary wastage.</p></div></article>
+        </div>
+      </section>
+
+      <section class="view" id="emergencyView">
+        <div class="section-heading"><div><h2>Emergency response center</h2><p>Trigger fictional incidents to demonstrate alert prioritisation.</p></div></div>
+        <div class="emergency-layout">
+          <article class="panel control-panel"><h3>Trigger a test incident</h3><p class="muted">These are practice scenarios only. No real services are contacted.</p><div class="incident-options"><button class="incident-option" data-incident="Fire reported"><span class="incident-icon red">♨</span><span><b>Fire reported</b><small>High-priority sample incident</small></span><span>＋</span></button><button class="incident-option" data-incident="Flood warning"><span class="incident-icon blue">≈</span><span><b>Flood warning</b><small>Weather-related sample incident</small></span><span>＋</span></button><button class="incident-option" data-incident="Road accident"><span class="incident-icon orange">⚠</span><span><b>Road accident</b><small>Traffic and safety incident</small></span><span>＋</span></button><button class="incident-option" data-incident="Power outage"><span class="incident-icon yellow">ϟ</span><span><b>Power outage</b><small>Utility disruption</small></span><span>＋</span></button></div><button id="clearIncidents" class="button button-quiet full-button">Clear test incidents</button></article>
+          <article class="panel result-panel"><div class="panel-heading"><div><h3>Incident queue</h3><p>Newest simulated incidents appear first.</p></div><span id="incidentCount" class="tiny-label">0 INCIDENTS</span></div><div id="incidentList" class="incident-list"><div class="empty-state"><span>✓</span><strong>No test incidents</strong><p>Choose an incident to see the response workflow.</p></div></div><div class="explain-box"><strong>Important</strong><p>This is not an emergency service. In a real emergency, contact the appropriate local authorities.</p></div></article>
+        </div>
+      </section>
+
+      <section class="view" id="teamView">
+        <div class="section-heading"><div><h2>Meet the project team</h2><p>The students who designed, coded and presented SmartCity AI.</p></div><span class="live-tag"><i></i> CLASS 8 · SCIENCE EXHIBITION</span></div>
+        <div class="team-grid"><article class="team-card"><div class="avatar">NM</div><h3>Naitik More</h3><span>PROJECT TEAM MEMBER</span></article><article class="team-card"><div class="avatar">AP</div><h3>Arjun Patil</h3><span>PROJECT TEAM MEMBER</span></article><article class="team-card"><div class="avatar">VP</div><h3>Vedant Patil</h3><span>PROJECT TEAM MEMBER</span></article><article class="team-card"><div class="avatar">SD</div><h3>Sayyam Dangi</h3><span>PROJECT TEAM MEMBER</span></article><article class="team-card"><div class="avatar">ZS</div><h3>Zaid Sheikh</h3><span>PROJECT TEAM MEMBER</span></article></div>
+        <article class="panel team-about"><div class="panel-heading"><div><h3>About our project</h3><p>SmartCity AI — Smart City Management &amp; Emergency Response Simulator</p></div></div>
+          <div class="team-points">
+            <div class="explain-box"><strong>What we built</strong><p>A dashboard that turns sample traffic, air-quality, water and incident data into statuses, alerts and recommendations using simple rules.</p></div>
+            <div class="explain-box"><strong>What we learned</strong><p>How HTML, CSS and JavaScript work together, and how threshold rules can support decisions in a smart city.</p></div>
+            <div class="explain-box"><strong>Responsible use</strong><p>All data is fictional. It does not control real infrastructure or contact emergency services. Real cities need sensors, security and human experts.</p></div>
+          </div></article>
+      </section>
+
+      <footer><span>SmartCity AI · Class 8 Science Exhibition</span><span>Made by Naitik More, Arjun Patil, Vedant Patil, Sayyam Dangi &amp; Zaid Sheikh · Sample data only</span></footer>
+    </main>
+  </div>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <button id="chatLauncher" class="chat-launcher" aria-label="Open SmartCity assistant">✦ <span>Ask City AI</span></button>
+  <section id="chatPanel" class="chat-panel" aria-label="SmartCity assistant" hidden>
+    <div class="chat-head">
+      <div><strong>✦ City AI Assistant</strong><small>Educational demo assistant</small></div>
+      <button id="chatClose" class="icon-button" aria-label="Close assistant">×</button>
+    </div>
+    <div id="chatMessages" class="chat-messages" aria-live="polite">
+      <div class="chat-bubble bot">Hi! Ask me about traffic, air quality, water, alerts, or how this project works.</div>
+    </div>
+    <div class="chat-suggestions">
+      <button data-chat-prompt="Explain traffic control">Traffic</button>
+      <button data-chat-prompt="What does AQI mean?">AQI</button>
+      <button data-chat-prompt="How does the project work?">How it works</button>
+    </div>
+    <form id="chatForm" class="chat-form">
+      <input id="chatInput" type="text" maxlength="240" placeholder="Ask about the city…" autocomplete="off" aria-label="Ask the assistant">
+      <button type="submit" aria-label="Send message">➤</button>
+    </form>
+    <p class="chat-footnote">Rule-based answers · Not a live AI service</p>
+  </section>
+
+  <section id="presentationOverlay" class="presentation-overlay" hidden>
+    <div class="presentation-card">
+      <div class="presentation-top"><span class="presentation-kicker">SMARTCITY AI · EXHIBITION TOUR</span><button id="presentationClose" class="icon-button" aria-label="Close presentation">×</button></div>
+      <div class="presentation-progress"><i id="presentationProgress"></i></div>
+      <div id="presentationStepNumber" class="presentation-step-number">STEP 1 OF 5</div>
+      <h2 id="presentationTitle">Welcome to SmartCity AI</h2>
+      <p id="presentationText">A software-only smart city simulator that demonstrates how data and simple rules can support city planning.</p>
+      <div class="presentation-actions"><button id="presentationPrev" class="button button-quiet">← Back</button><button id="presentationNext" class="button button-primary">Next →</button></div>
+      <p class="presentation-disclaimer">All city readings and incidents are simulated for education. No real infrastructure or emergency services are connected.</p>
+    </div>
+  </section>
+
+  <script src="script.js"></script>
+</body>
+</html>
